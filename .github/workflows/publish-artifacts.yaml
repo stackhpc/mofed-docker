@@ -41,7 +41,7 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v2
         with:
-          context: ./utils
+          context: .
           platforms: linux/amd64
           build-args: |
             MLNX_OFED_VERSION=${{ matrix.ofed_version }}
