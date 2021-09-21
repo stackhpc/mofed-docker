@@ -8,11 +8,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - &ofed_distro
-            ofed_version: 5.4-1.0.3.0
+          - ofed_version: 5.4-1.0.3.0
             distro: ubuntu20.04
             kernel_version: 5.4.0-81-generic
-          - <<: *ofed_distro
+          - ofed_version: 5.4-1.0.3.0
+            distro: ubuntu20.04
             kernel_version: 5.4.0-84-generic
     steps:
       - name: Check out the repository
