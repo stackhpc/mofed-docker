@@ -1,9 +1,7 @@
-name: Publish artifacts
-# Run the tasks on every push
+name: Publish chart
 on:
   push:
     paths: ['chart/**']
-    tags: ['*']
 jobs:
   publish_chart:
     name: Publish Helm chart to GitHub pages

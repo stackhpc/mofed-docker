@@ -17,7 +17,6 @@ image:
 imagePullSecrets: []
 
 podSecurityContext: {}
-
 # We require a privileged container
 securityContext:
   privileged: true
