@@ -8,9 +8,12 @@ jobs:
     strategy:
       matrix:
         include:
-          - ofed_version: 5.4-1.0.3.0
+          - &ofed_distro
+            ofed_version: 5.4-1.0.3.0
             distro: ubuntu20.04
             kernel_version: 5.4.0-81-generic
+          - <<: *ofed_distro
+            kernel_version: 5.4.0-84-generic
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2
@@ -49,7 +52,7 @@ jobs:
             MLNX_OFED_ARCH=amd64
             MLNX_OFED_KERNEL_VERSION=${{ matrix.kernel_version }}
           push: true
-          tags: ghcr.io/stackhpc/mofed-${{ matrix.ofed_version }}-${{ matrix.kernel_version }}:${{ matrix.distro }}-amd64
+          tags: ghcr.io/stackhpc/mofed:${{ matrix.ofed_version }}-${{ matrix.distro }}-${{ matrix.kernel_version }}-amd64
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
 
