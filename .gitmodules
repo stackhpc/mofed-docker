@@ -1,0 +1,3 @@
+[submodule "vendor/mellanox/ofed-docker"]
+	path = vendor/mellanox/ofed-docker
+	url = https://github.com/Mellanox/ofed-docker.git
