@@ -7,13 +7,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        include:
-          - ofed_version: 5.4-1.0.3.0
-            distro: ubuntu20.04
-            kernel_version: 5.4.0-81-generic
-          - ofed_version: 5.4-1.0.3.0
-            distro: ubuntu20.04
-            kernel_version: 5.4.0-84-generic
+        ofed_version: [5.4-1.0.3.0]
+        distro: [ubuntu20.04]
+        kernel_version:
+          - 5.4.0-81-generic
+          - 5.4.0-84-generic
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2

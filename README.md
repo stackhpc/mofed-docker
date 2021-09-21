@@ -1,28 +1,23 @@
 # mofed-docker
 
 This project builds the Mellanox OFED drivers different driver versions,
-Ubuntu distributions and kernel versions.
+Ubuntu distributions and kernel versions and provides a [Helm](https://helm.sh)
+for installing them onto nodes in a Kubernetes cluster.
 
-The images are made available via GitHub packages with tags of the form:
+## Images
+
+The images are made available via GitHub packages in the
+[stackhpc/mofed](https://github.com/stackhpc/mofed-utils/pkgs/container/mofed)
+repository with tags of the form:
 
 ```
-ghcr.io/stackhpc/mofed-{{ ofed_version }}-{{ kernel_version }}:{{ distro }}-amd64
+{{ ofed_version }}-{{ distro }}-{{ kernel_version }}-amd64
 ```
 
 For example:
 
 ```
-ghcr.io/stackhpc/mofed-5.4-1.0.3.0-5.4.0-81-generic:ubuntu20.04-amd64
+ghcr.io/stackhpc/mofed:5.4-1.0.3.0-ubuntu20.04-5.4.0-81-generic-amd64
 ```
 
-These images are suitable for use with the
-[Mellanox network-operator](https://github.com/Mellanox/network-operator)
-using the values:
-
-```yaml
-ofedDriver:
-  repository: ghcr.io/stackhpc
-  image: mofed
-  # This should be of the form {ofed_version}-{kernel_version}
-  version: 5.4-1.0.3.0-5.4.0-81-generic
-```
+## Installation
