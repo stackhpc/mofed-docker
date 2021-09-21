@@ -2,6 +2,7 @@ name: Publish chart
 on:
   push:
     paths: ['chart/**']
+    tags: ['*']
 jobs:
   publish_chart:
     name: Publish Helm chart to GitHub pages
