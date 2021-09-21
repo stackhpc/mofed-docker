@@ -2,6 +2,9 @@ nameOverride: ""
 fullnameOverride: ""
 
 # The daemonsets to deploy
+# A daemonset will be created for each OS and kernel version that targets
+# only nodes with that particular OS and kernel version using labels
+# from the node feature discovery addon
 daemonsets:
   - osId: ubuntu
     osVersion: "20.04"
@@ -23,7 +26,7 @@ securityContext:
 
 nodeSelector:
   archLabel: kubernetes.io/arch
-  # By default, use labels from the node feature discovery addon
+  # Use labels from the node feature discovery addon
   pciDeviceLabel: feature.node.kubernetes.io/pci-15b3.present
   osIdLabel: feature.node.kubernetes.io/system-os_release.ID
   osVersionLabel: feature.node.kubernetes.io/system-os_release.VERSION_ID

@@ -3,7 +3,7 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: {{ include "mofed-driver.fullname" $ }}
+  name: {{ include "mofed-driver.fullname" $ }}-{{ $ds.osId }}{{ replace "." "" $ds.osVersion }}-{{ replace "." "-" $ds.kernelVersion }}
   labels:
     {{- include "mofed-driver.labels" $ | nindent 4 }}
     mofed-driver.stackhpc.com/os-id: {{ $ds.osId }}
@@ -33,7 +33,7 @@ spec:
       securityContext: {{ toYaml $.Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ $.Chart.Name }}
-          image: {{ $.Values.image.repository }}:{{ $.Chart.AppVersion }}-{{ $ds.osId}}{{ $ds.osVersion }}-{{ $ds.kernelVersion }}-amd64
+          image: {{ $.Values.image.repository }}:{{ $.Chart.AppVersion }}-{{ $ds.osId }}{{ $ds.osVersion }}-{{ $ds.kernelVersion }}-amd64
           imagePullPolicy: {{ $.Values.image.pullPolicy }}
           securityContext: {{ toYaml $.Values.securityContext | nindent 12 }}
           volumeMounts:
