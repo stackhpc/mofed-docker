@@ -1,0 +1,27 @@
+name: Publish artifacts
+# Run the tasks on every push
+on:
+  push:
+    paths: ['chart/**']
+    tags: ['*']
+jobs:
+  publish_chart:
+    name: Publish Helm chart to GitHub pages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+        with:
+          # This is important for "git rev-list --count" to work correctly when
+          # determining the number of commits since the last tag
+          fetch-depth: 0
+
+      # Use an up-to-date version of Python for the script
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Publish chart
+        run: ./ci/publish-chart.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

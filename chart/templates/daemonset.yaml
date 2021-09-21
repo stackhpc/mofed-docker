@@ -1,0 +1,90 @@
+{{- range $ds := .Values.daemonsets -}}
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "mofed-driver.fullname" $ }}
+  labels:
+    {{- include "mofed-driver.labels" $ | nindent 4 }}
+    mofed-driver.stackhpc.com/os-id: {{ $ds.osId }}
+    mofed-driver.stackhpc.com/os-version: {{ $ds.osVersion }}
+    mofed-driver.stackhpc.com/kernel-version: {{ $ds.kernelVersion }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "mofed-driver.selectorLabels" $ | nindent 6 }}
+      mofed-driver.stackhpc.com/distro-id: {{ $ds.osId }}
+      mofed-driver.stackhpc.com/distro-version: {{ $ds.osVersion }}
+      mofed-driver.stackhpc.com/kernel-version: {{ $ds.kernelVersion }}
+  template:
+    metadata:
+      annotations: {{ toYaml $.Values.podAnnotations | nindent 8 }}
+      labels:
+        {{- include "mofed-driver.selectorLabels" $ | nindent 8 }}
+        mofed-driver.stackhpc.com/distro-id: {{ $ds.osId }}
+        mofed-driver.stackhpc.com/distro-version: {{ $ds.osVersion }}
+        mofed-driver.stackhpc.com/kernel-version: {{ $ds.kernelVersion }}
+    spec:
+      tolerations: {{ toYaml $.Values.tolerations | nindent 8 }}
+      hostNetwork: true
+      {{- with $.Values.imagePullSecrets }}
+      imagePullSecrets: {{ toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext: {{ toYaml $.Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ $.Chart.Name }}
+          image: {{ $.Values.image.repository }}:{{ $.Chart.AppVersion }}-{{ $ds.osId}}{{ $ds.osVersion }}-{{ $ds.kernelVersion }}-amd64
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          securityContext: {{ toYaml $.Values.securityContext | nindent 12 }}
+          volumeMounts:
+            - name: run-mlnx-ofed
+              mountPath: /run/mellanox/drivers
+              mountPropagation: Bidirectional
+            - name: etc-network
+              mountPath: /etc/network
+            - name: host-etc
+              mountPath: /host/etc
+            - name: host-udev
+              mountPath: /host/lib/udev
+          resources: {{ toYaml $.Values.resources | nindent 12 }}
+          startupProbe:
+            exec:
+              command: [sh, -c, 'ls /.driver-ready']
+            initialDelaySeconds: {{ $.Values.probes.startup.initialDelaySeconds }}
+            failureThreshold: {{ $.Values.probes.startup.failureThreshold }}
+            successThreshold: 1
+            periodSeconds: {{ $.Values.probes.startup.periodSeconds }}
+          livenessProbe:
+            exec:
+              command: [sh, -c, 'lsmod | grep mlx5_core']
+            initialDelaySeconds: {{ $.Values.probes.liveness.initialDelaySeconds }}
+            failureThreshold: 1
+            successThreshold: 1
+            periodSeconds: {{ $.Values.probes.liveness.periodSeconds }}
+          readinessProbe:
+            exec:
+              command: [sh, -c, 'lsmod | grep mlx5_core']
+            initialDelaySeconds: {{ $.Values.probes.readiness.initialDelaySeconds }}
+            failureThreshold: 1
+            periodSeconds: {{ $.Values.probes.readiness.periodSeconds }}
+      terminationGracePeriodSeconds: {{ $.Values.terminationGracePeriodSeconds }}
+      volumes:
+        - name: run-mlnx-ofed
+          hostPath:
+            path: /run/mellanox/drivers
+        - name: etc-network
+          hostPath:
+            path: /etc/network
+        - name: host-etc
+          hostPath:
+            path: /etc
+        - name: host-udev
+          hostPath:
+            path: /lib/udev
+      nodeSelector:
+        {{ $.Values.nodeSelector.archLabel }}: "amd64"
+        {{ $.Values.nodeSelector.pciDeviceLabel }}: "true"
+        {{ $.Values.nodeSelector.osIdLabel }}: {{ $ds.osId | quote }}
+        {{ $.Values.nodeSelector.osVersionLabel }}: {{ $ds.osVersion | quote }}
+        {{ $.Values.nodeSelector.kernelVersionLabel }}: {{ $ds.kernelVersion | quote }}
+{{ end }}

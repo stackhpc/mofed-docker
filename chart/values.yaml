@@ -1,0 +1,63 @@
+nameOverride: ""
+fullnameOverride: ""
+
+# The daemonsets to deploy
+daemonsets:
+  - osId: ubuntu
+    osVersion: "20.04"
+    kernelVersion: 5.4.0-81-generic
+  - osId: ubuntu
+    osVersion: "20.04"
+    kernelVersion: 5.4.0-84-generic
+
+image:
+  repository: ghcr.io/stackhpc/mofed
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+podSecurityContext: {}
+# We require a privileged container
+securityContext:
+  privileged: true
+
+nodeSelector:
+  archLabel: kubernetes.io/arch
+  # By default, use labels from the node feature discovery addon
+  pciDeviceLabel: feature.node.kubernetes.io/pci-15b3.present
+  osIdLabel: feature.node.kubernetes.io/system-os_release.ID
+  osVersionLabel: feature.node.kubernetes.io/system-os_release.VERSION_ID
+  kernelVersionLabel: feature.node.kubernetes.io/kernel-version.full
+
+probes:
+  startup:
+    initialDelaySeconds: 10
+    failureThreshold: 60
+    periodSeconds: 10
+  liveness:
+    initialDelaySeconds: 10
+    periodSeconds: 10
+  readiness:
+    initialDelaySeconds: 10
+    periodSeconds: 10
+
+# OFED pods can take a while to exit due to unloading of drivers
+terminationGracePeriodSeconds: 120
+
+# Annotations for the daemonset pods
+podAnnotations:
+  scheduler.alpha.kubernetes.io/critical-pod: ""
+
+# Tolerations for the daemonset pods
+tolerations:
+  - key: CriticalAddonsOnly
+    operator: Exists
+  - key: node-role.kubernetes.io/master
+    operator: Exists
+    effect: NoSchedule
+  - key: nvidia.com/gpu
+    operator: Exists
+    effect: NoSchedule
+
+# Resources for the daemonset pods
+resources: {}

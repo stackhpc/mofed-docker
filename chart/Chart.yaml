@@ -1,0 +1,7 @@
+apiVersion: v2
+name: mofed-driver
+description: Helm chart for installing Mellanox OFED drivers.
+type: application
+version: 0.1.0
+# The app version is the Mellanox OFED driver version
+appVersion: "5.4-1.0.3.0"
