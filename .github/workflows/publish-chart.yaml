@@ -1,8 +1,11 @@
 name: Publish chart
 on:
   push:
+    # The path filter is not evaluated for tags, so this should
+    # run for all changes to ./chart and every tag
+    branches: ['**']
+    tags: ['**']
     paths: ['chart/**']
-    tags: ['*']
 jobs:
   publish_chart:
     name: Publish Helm chart to GitHub pages
