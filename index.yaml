@@ -3,7 +3,17 @@ entries:
   mofed-driver:
   - apiVersion: v2
     appVersion: 5.4-1.0.3.0
-    created: "2021-09-21T16:01:46.903615902Z"
+    created: "2021-09-22T09:21:25.872092725Z"
+    description: Helm chart for installing Mellanox OFED drivers.
+    digest: 6537fe504f043c969f21f9d1c0d7bc91a82a649f39f718e8b237ff185e577256
+    name: mofed-driver
+    type: application
+    urls:
+    - mofed-driver-0.1.0-dev.0.main.19.tgz
+    version: 0.1.0-dev.0.main.19
+  - apiVersion: v2
+    appVersion: 5.4-1.0.3.0
+    created: "2021-09-22T09:21:25.870831926Z"
     description: Helm chart for installing Mellanox OFED drivers.
     digest: a859ddc3d33a7efdd82f881b80efc124b1bdf08841f806cf71c59d44d0996672
     name: mofed-driver
@@ -13,7 +23,7 @@ entries:
     version: 0.1.0-dev.0.main.18
   - apiVersion: v2
     appVersion: 5.4-1.0.3.0
-    created: "2021-09-21T16:01:46.903043872Z"
+    created: "2021-09-22T09:21:25.870287126Z"
     description: Helm chart for installing Mellanox OFED drivers.
     digest: dfd72c967c43c406077d95def97b9c344c67caf574606c06a9b12afffc541a4d
     name: mofed-driver
@@ -23,7 +33,7 @@ entries:
     version: 0.1.0-dev.0.main.17
   - apiVersion: v2
     appVersion: 5.4-1.0.3.0
-    created: "2021-09-21T16:01:46.902528745Z"
+    created: "2021-09-22T09:21:25.869731826Z"
     description: Helm chart for installing Mellanox OFED drivers.
     digest: cee5e58f915a6305f774287b97dd7207f99f29c1c1aeb9def2e78569faf375d3
     name: mofed-driver
@@ -31,4 +41,4 @@ entries:
     urls:
     - mofed-driver-0.1.0-dev.0.main.14.tgz
     version: 0.1.0-dev.0.main.14
-generated: "2021-09-21T16:01:46.901822408Z"
+generated: "2021-09-22T09:21:25.868948927Z"
