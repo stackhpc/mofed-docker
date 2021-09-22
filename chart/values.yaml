@@ -1,17 +1,22 @@
 nameOverride: ""
 fullnameOverride: ""
 
-# The daemonsets to deploy
+# The distros and kernel versions to target
 # A daemonset will be created for each OS and kernel version that targets
-# only nodes with that particular OS and kernel version using labels
-# from the node feature discovery addon
-daemonsets:
-  - osId: ubuntu
-    osVersion: "20.04"
-    kernelVersion: 5.4.0-81-generic
-  - osId: ubuntu
-    osVersion: "20.04"
-    kernelVersion: 5.4.0-84-generic
+# only nodes with that particular OS and kernel version using labels from
+# the node feature discovery addon
+# A "catchall" daemonset will also be created for each distro that targets
+# nodes running that distro with a kernel version that is not in the list
+# In this case, the OFED driver container is able to dynamically recompile
+# the OFED driver for the running kernel - it just takes ages (note that
+# this is still a distro-specific process, so we cannot use one container
+# image for all distros)
+distroKernelVersions:
+  - id: ubuntu
+    version: "20.04"
+    kernelVersions:
+      - 5.4.0-81-generic
+      - 5.4.0-84-generic
 
 image:
   repository: ghcr.io/stackhpc/mofed
@@ -36,6 +41,9 @@ probes:
   startup:
     initialDelaySeconds: 10
     failureThreshold: 60
+    # When a recompilation is required, we need a much bigger failure threshold
+    # It can take up to 45m, so allow an hour
+    failureThresholdRecompilation: 360
     periodSeconds: 10
   liveness:
     initialDelaySeconds: 10
